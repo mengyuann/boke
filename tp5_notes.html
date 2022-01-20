@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tp5学习笔记</title>
+    <style>
+        *{padding:0px;margin:0px;}
+        body{background-image: url("https://pic4.zhimg.com/v2-ab05cf536b6043e4ba0905584391a7a7_r.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-origin: border-box;
+            width:100%; height:100%;}
+        
+        #img{size: 50px}
+        img{float: none;margin: auto;width: 60%;height: 100%;background-color: burlywood }
+    </style>
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.css.map" />
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.min.css.map" />
+    <link rel="stylesheet" href="../files/css/bootstrap.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap.css.map" />
+    <link rel="stylesheet" href="../files/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap.min.css.map" />
+    <script type="text/javascript" src="../files/js/bootstrap.js" ></script>
+    <script type="text/javascript" src="../files/js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="../files/js/npm.js" ></script>
+</head>
+<body>
+
+            <!-- 导航栏 -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">王鹏程</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="../files/list.html">博客列表</a></li>
+                <li><a href="#">博客分类</a></li>
+                <li><a href="../files/about.html">关于博客</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">账号管理
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">账号</li>
+                        <li><a href="/login">后台管理</a></li>
+                        <li><a href="/login">账号管理</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">管理</li>
+                        <li><a href="/login">创建博文</a></li>
+                        <li><a href="/login">博客管理</a></li>
+                        <li><a href="/login">博客信息</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="输入...">
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<header>
+    <div style="margin-left: 25%;width: 50%;background-color: burlywood;position: absolute; height: fit-content;">
+
+        <div style="margin:50px 40px ">
+            <br>
+            
+            <h1>tp5安装与配置笔记</h1>
+            <h3>1.安装</h3>
+            <p>参考官方文档https//www.kancloud.cn/manual/thinkphp5_1/353946</p>
+            <p>建议使用composer下载tp5框架: composer create-project topthink/think=5.1.* tp5</p>
+            <p>有可能报错: zsh: no matches found: topthink/think=5.1.*</p>
+            <p>原因:没有指定具体的版本</p>
+            <p>解决方法:composer create-project topthink/think=5.1.31 tp5    # tp5为项目名</p>
+            <p>或是</p>
+            <p>一般情况下，composer 安装的是最新的稳定版本，不一定是最新版本，如果你需要安装实时更新的版本（适合学习过程），</p>
+            <p>可以安装5.1.x-dev版本。</p>
+            <p>composer create-project topthink/think=5.1.x-dev tp5</p>
+            <p>下载核心框架</p>
+            <p>composer update topthink/framework</p>
+            <p>下载后,在tp5(自己的命名)目录下,终端输入 php think run 会在:8000端口运行框架,出现此图片则为成功</p>
+            <p><img src="http://175.178.25.158/webfiles/1001.jpeg" alt="" /></p>
+            <p>如报错Could not open input file think关闭终端,重新打开.</p>
+            <p>如报错:</p>
+            <p><img src="http://175.178.25.158/webfiles/1002.jpeg" alt="" /></p>
+            <p>则为端口被占用,可更换其他端口:php think run -p 8080(8080为自己选中的端口)</p>
+            <p>至此,tp5框架安装完成.</p>
+            <h2>2.配置</h2>
+            <h3>1.建议不使用application文件夹,重新新建app文件夹</h3>
+            <p><img src="http://175.178.25.158/webfiles/1003.jpeg" alt="" /></p>
+            <p>创建后,拷贝application中所有文件</p>
+            <h3>2.配置tp5/think文件</h3>
+            <p>// [ 应用入口文件 ]</p>
+            <p>namespace think;</p>
+            <p>// [ 应用入口文件 ]</p>
+            <p>namespace think;</p>
+            <p>// 调试模式开关</p>
+            <p>define('APP_DEBUG', true);</p>
+            <p>// 定义CMF根目录,可更改此目录</p>
+            <p>define('CMF_ROOT', dirname(<strong>DIR</strong>) . '/');</p>
+            <p>// 定义CMF数据目录,可更改此目录</p>
+            <p>define('CMF_DATA', CMF_ROOT . 'data/');</p>
+            <p>// 定义应用目录</p>
+            <p>define('APP_PATH', CMF_ROOT . 'application/');</p>
+            <p>// 定义网站入口目录</p>
+            <p>define('WEB_ROOT', <strong>DIR</strong> . '/');</p>
+            <p>// 加载基础文件</p>
+            <p>require <strong>DIR</strong> . '/../thinkphp/base.php';</p>
+            <p>// 支持事先使用静态方法设置Request对象和Config对象</p>
+            <p>// 执行应用并响应</p>
+            <p>Container::get('app', [APP_PATH])-&gt;run()-&gt;send();</p>
+            <h3>3.至此tp5框架安装完成.默认页面即为:</h3>
+            <p><img src="http://175.178.25.158/webfiles/1004.jpeg" alt="" /></p>
+            <p><img src="http://175.178.25.158/webfiles/1008.png" alt="" /></p>
+            <p>运行框架:php think run</p>
+            <p>此链接在浏览器中打开(建议使用chrome,使用F12可进行调试)</p>
+            <p>出现步骤一页面.</p>
+            <p>路由访问路径为:application下的文件夹/控制器名/方法名</p>
+            <p>如路径改为http://127.0.0.1:8000/index/index/hello 便能访问hello方法</p>
+            <h1>问题记录:</h1>
+            <p><img src="http://175.178.25.158/webfiles/1007.jpeg" alt="" /></p>
+            <p>pubic/index.php文件配置错误:</p>
+            <p>检查是否配置正确:</p>
+            <p>// 定义应用目录</p>
+            <p>define('APP_PATH', CMF_ROOT . 'application/');</p>
+            <p>// 执行应用并响应</p>
+            <p>Container::get('app', [APP_PATH])-&gt;run()-&gt;send();</p>
+
+        </div>
+    </div>
+    <div style="margin-left: 10%;width: 14%;height: fit-content;background-color: rgb(223, 210, 92);position: absolute;">
+        <div style="margin:50px 40px">
+            <br><br>
+            <p><a href="../files/tp5_notes.html">1.tp5安装与配置笔记</a></p>
+            <br>
+            <p><a href="../files/php_notes2.html">2.老生常谈,垃圾回收机制</a></p>
+        </div>
+    </div>
+</header>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>垃圾回收机制</title>
+    <style>
+        *{padding:0px;margin:0px;}
+        body{background-image: url("https://pic4.zhimg.com/v2-ab05cf536b6043e4ba0905584391a7a7_r.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-origin: border-box;
+            width:100%; height:100%;}
+            header{
+                height: 100%;
+            }
+        #a0{position: absolute;padding: 50px 450px;font-size: calc(90px);color:#f5f5f5;font-style: italic;}
+        #img{size: 50px}
+        img{float: none;margin: auto;width: 60%;height: 100%;background-color: burlywood }
+    </style>
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.css.map" />
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap-theme.min.css.map" />
+    <link rel="stylesheet" href="../files/css/bootstrap.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap.css.map" />
+    <link rel="stylesheet" href="../files/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../files/css/bootstrap.min.css.map" />
+    <script type="text/javascript" src="../files/js/bootstrap.js" ></script>
+    <script type="text/javascript" src="../files/js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="../files/js/npm.js" ></script>
+</head>
+<body>
+    
+                <!-- 导航栏 -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">王鹏程</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="../files/list.html">博客列表</a></li>
+                    <li><a href="#">博客分类</a></li>
+                    <li><a href="../files/about.html">关于博客</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">账号管理
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header">账号</li>
+                            <li><a href="/login">后台管理</a></li>
+                            <li><a href="/login">账号管理</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">管理</li>
+                            <li><a href="/login">创建博文</a></li>
+                            <li><a href="/login">博客管理</a></li>
+                            <li><a href="/login">博客信息</a></li>
+    
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="输入...">
+                    <button type="submit" class="btn btn-default">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <header>
+        <div style="margin-left: 25%;width: 50%;height: fit-content;background-color: burlywood;position: absolute;">
+            <div style="margin:50px 40px">
+                <br>
+                <h1>老生常谈,垃圾回收机制</h1>
+            <h2>借鉴文章</h2>
+            <blockquote>
+                <p><a href="https://www.php.net/manual/zh/features.gc.php">Manual</a></p>
+            </blockquote>
+            <blockquote>
+                <p><a href="https://www.cnblogs.com/taijun/p/4206770.html">tai君 - 博客园</a></p>
+            </blockquote>
+            <blockquote>
+                <p><a href="https://zhuanlan.zhihu.com/p/130986001">PHP爱好者</a></p>
+            </blockquote>
+            <h2>个人理解</h2>
+            <h3>1.计数器</h3>
+            <ul>
+                <li>zval : 所有的变量都存在于一个叫zval的容器,类似一个盒子,每次创建变量都会放入这个盒子.</li>
+                <li>is_ref : bool值,用来判断该变量是普通变量还是引用变量.</li>
+                <li>refcount : 计数值每次变量被引用时加一,初次被定义时为1,因此为1时is_ref总是false.每次被引用时,refcount便会加一,当被unset或函数执行结束时便减一,当为0时便会被当作垃圾<strong>回收</strong>.</li>
+            </ul>
+            <pre><code class="language-php">$a = 'new string';
+</code></pre>
+            <p>此时 $a的is_ref=false,refcount=1;</p>
+            <pre><code class="language-php">$a = 'new string';
+$b = $a;
+</code></pre>
+            <p>此时 $a的is_ref=true,refcount=2;</p>
+            <pre><code class="language-php">$a = 'new string';
+$b = $a;
+unset($b);
+</code></pre>
+            <p>此时 $a的is_ref=false,refcount=1;</p>
+            <h3>2.环状引用问题</h3>
+            <p>在<strong>php5.2</strong>及更早版本的PHP中，没有专门的垃圾回收器GC（Garbage Collection），引擎在判断一个变量空间是否能够被释放的时候是依据这个变量的zval的refcount的值，如果refcount为0，那么变量的空间可以被释放，否则就不释放，这是一种非常简单的GC实现。但是会出现环状引用导致内存泄漏问题.</p>
+            <ul>
+                <li>环状引用:意如其名,因两个变量互相引用,形成死环,导致不被回收,浪费内存.</li>
+            </ul>
+            <pre><code class="language-php">//环状引用示例
+$a = ['new string'];
+$a[] = &amp;$a;
+</code></pre>
+            <p>在<strong>php5.3</strong>的GC中，针对的垃圾采用了专门的算法来处理环状引用导致内存泄露的问题.</p>
+            <ol>
+                <li>
+                    <p>如果一个zval的refcount增加，那么此zval还在使用，肯定不是垃圾，不会进入缓冲区</p>
+                </li>
+                <li>
+                    <p>如果一个zval的refcount减少到0， 那么zval会被立即释放掉，不属于GC要处理的垃圾对象，不会进入缓冲区。</p>
+                </li>
+                <li>
+                    <p>如果一个zval的refcount减少之后大于0，那么此zval还不能被释放，此zval可能成为一个垃圾，将其放入缓冲区。PHP5.3中的GC针对的就是这种zval进行的处理。</p>
+                </li>
+            </ol>
+            <p>也就是说,当变量的refcount减少但不为0时,与5.2不同,变量会被放入缓冲区,并在缓冲区达到最大临界值时（最大值可以设置）,回收算法会去遍历所有缓存区的变量,清理掉其中的垃圾</p>
+            <p>从<strong>PHP7</strong>的NTS版本开始,$c=$b=$a之后a的引用计数也是1,具体分类如下：
+                在PHP 7中，zval可以被引用计数或不被引用。在zval结构中有一个标志确定了这一点。</p>
+            <ol>
+                <li>对于null，bool，int和double的类型变量，refcount永远不会计数；</li>
+                <li>对于对象、资源类型，refcount计数和php5的一致；</li>
+                <li>对于字符串，未被引用的变量被称为“实际字符串”。而那些被引用的字符串被重复删除（即只有一个带有特定内容的被插入的字符串）并保证在请求的整个持续时间内存在，所以不需要为它们使用引用计数；如果使用了opcache，这些字符串将存在于共享内存中，在这种情况下，您不能使用引用计数（因为我们的引用计数机制是非原子的）；</li>
+                <li>对于数组，未引用的变量被称为“不可变数组”。其数组本身计数与php5一致，但是数组里面的每个键值对的计数，则按前面三条的规则（即如果是字符串也不在计数）；如果使用opcache，则代码中的常量数组文字将被转换为不可变数组。再次，这些生活在共享内存，因此不能使用refcounting。</li>
+            </ol>
+
+            <h1>session与cookie的区别和联系</h1>
+            <h2>区别</h2>
+            <ol>
+                <li>存放位置：Session 保存在服务器，Cookie 保存在客户端.</li>
+                <li>存放的形式：Session 是以对象的形式保存在服务器，Cookie 以字符串的形式保存在客户端.</li>
+                <li>用途：Cookies 适合做保存用户的个人设置，爱好等，Session 适合做客户的身份验证.</li>
+                <li>路径：Session 不能区分路径，同一个用户在访问一个网站期间，所有的 Session 在任何一个地方都可以访问到。而 Cookie 中如果设置了路径参数，那么同一个网站中不同路径下的 Cookie 互相是访问不到的.</li>
+                <li>安全性：Cookie 不是很安全，别人可以分析存放在本地的 COOKIE 并进行 COOKIE 欺骗，考虑到安全应当使用 session.</li>
+                <li>大小以及数量限制：每个域名所包含的 cookie 数：IE7/8,FireFox:50 个，Opera30 个； Cookie 总大小：Firefox 和 Safari 允许 cookie 多达 4097 个字节，Opera 允许 cookie 多达 4096 个字 节，InternetExplorer 允许 cookie 多达 4095 个字节；一般认为 Session 没有大小和数量限制.</li>
+            </ol>
+            <h2>联系</h2>
+            <p>Session 需要借助 Cookie 才能正常工作。如果客户端完全禁止 Cookie，Session 将失效！因为 Session 是由应用服务器维持的一个 服务器端的存储空间，用户在连接服务器时，会由服务器生成一个唯一的 SessionID, 用该 SessionID 为标识符来存取服务器端的 Session 存储空间。而 SessionID 这一数据则是保存到客户端，用 Cookie 保存的，用户提交页面时，会将这一 SessionID 提交到服务器端，来存取 Session 数据。这一过程，是不用开发人员干预的。所以一旦客户端禁用 Cookie，那么 Session 也会失效。</p>
+                
+                
+                
+    
+            </div>
+        </div>
+        <div style="margin-left: 10%;width: 14%;height: fit-content;background-color: rgb(223, 210, 92);position: absolute;">
+            <div style="margin:50px 40px">
+                <br><br>
+                <p><a href="../files/tp5_notes.html">1.tp5安装与配置笔记</a></p>
+                <br>
+                <p><a href="../files/php_notes2.html">2.老生常谈,垃圾回收机制</a></p>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
